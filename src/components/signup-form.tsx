@@ -1,59 +1,62 @@
 "use client";
 import React, { useState } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import Link from "next/link";
-import { signup } from "./pages/api/service";
-
+import { signup } from "../pages/api/service";
+import Swal from "sweetalert2";
 export default function SignupForm() {
-  // const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [emailError, setEmailError] = useState(false);
-  // const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  // const [passwordError, setPasswordError] = useState(false);
-  // const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  // const handleNameChange = (event: any) => {
-  //   const name = event.target.value;
-  //   setName(name);
-  // };
+  const handleNameChange = (event: any) => {
+    const name = event.target.value;
+    setName(name);
+  };
 
-  // const handleEmailChange = (event: any) => {
-  //   const email = event.target.value;
-  //   setEmail(email);
-  // };
+  const handleEmailChange = (event: any) => {
+    const email = event.target.value;
+    setEmail(email);
+  };
 
-  // const handlePasswordChange = (event: any) => {
-  //   const password = event.target.value;
-  //   setPassword(password);
-  // };
+  const handlePasswordChange = (event: any) => {
+    const password = event.target.value;
+    setPassword(password);
+  };
 
-  // const signIn = async (event: any) => {
-  //   event.preventDefault();
-  //   const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-  //   setEmailError(false);
-  //   setPasswordError(false);
-  //   if (!email) {
-  //     setEmailError(true);
-  //     setEmailErrorMessage("Please fill your email");
-  //   } else if (!password) {
-  //     setPasswordError(true);
-  //     setPasswordErrorMessage("Please enter a password");
-  //   } else if (!emailPattern.test(email)) {
-  //     setEmailError(true);
-  //     setEmailErrorMessage("Please enter a valid email");
-  //   } else if (!emailError && password) {
-  //     try {
-  //       const body = { name,email, password };
-  //       console.log("Bodyooooooooooooooooo");
-  //       console.log("Body", body);
-
-  //       const response = await signup(body);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+  const signUp = async (event: any) => {
+    event.preventDefault();
+    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    setEmailError(false);
+    setPasswordError(false);
+    if (!email) {
+      setEmailError(true);
+      setEmailErrorMessage("Please fill your email");
+    } else if (!password) {
+      setPasswordError(true);
+      setPasswordErrorMessage("Please enter a password");
+    } else if (!emailPattern.test(email)) {
+      setEmailError(true);
+      setEmailErrorMessage("Please enter a valid email");
+    } else if (!emailError && password) {
+      try {
+        const body = { name, email, password };
+        await signup(body);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "you signed up successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+  };
 
   const container: any = {
     display: "flex",
@@ -71,19 +74,11 @@ export default function SignupForm() {
     fontWeight: "bold",
     margin: 2,
   };
-  // const title = {
-  //   marginBottom: 2,
-  //   color: "#89CFF0",
-  // };
+
   return (
     <div style={container}>
       <Container component="main" maxWidth="xs">
-        {/* <Box>
-          <Typography component="h1" variant="h4" style={title}>
-            Login
-          </Typography>
-        </Box> */}
-        {/* <form style={form}>
+        <form style={form}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -132,14 +127,11 @@ export default function SignupForm() {
             variant="contained"
             color="primary"
             style={submit}
-            onClick={signIn}
+            onClick={signUp}
           >
-            Sign In
+            Sign Up
           </Button>
-          <Typography component="h1" variant="caption">
-            Dont have an account ?<Link href="/signup">sign up</Link>
-          </Typography>
-        </form> */}
+        </form>
       </Container>
     </div>
   );
