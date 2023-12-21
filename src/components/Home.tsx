@@ -20,8 +20,6 @@ export default function Home() {
     backgroundSize: "cover",
     backgroundPosition: "center",
     display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
     minHeight: "100vh",
   };
   return (

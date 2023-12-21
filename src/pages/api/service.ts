@@ -6,7 +6,6 @@ const login = tryCatchWrapper(async (body: any) => {
     path: "auth/login",
     data: body,
   });
-  // localStorage.setItem("token", JSON.stringify(response.data.accessToken));
   return response;
 });
 
