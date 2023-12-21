@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box } from "@mui/material";
+import { TextField, Button, Container, Typography, Alert } from "@mui/material";
 import Link from "next/link";
 import { login } from "../pages/api/service";
-
+import Swal from "sweetalert2";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,6 +11,7 @@ export default function LoginForm() {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEmailChange = (event: any) => {
     const email = event.target.value;
@@ -39,10 +40,25 @@ export default function LoginForm() {
     } else if (!emailError && password) {
       try {
         const body = { email, password };
-        console.log("Body", body);
-
-        const response = await login(body);
-      } catch (error) {
+        await login(body);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Signed in successfully",
+        });
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.message;
+        setErrorMessage(errorMessage);
         console.log(error);
       }
     }
@@ -64,18 +80,10 @@ export default function LoginForm() {
     fontWeight: "bold",
     margin: 2,
   };
-  // const title = {
-  //   marginBottom: 2,
-  //   color: "#89CFF0",
-  // };
+
   return (
     <div style={container}>
       <Container component="main" maxWidth="xs">
-        {/* <Box>
-          <Typography component="h1" variant="h4" style={title}>
-            Login
-          </Typography>
-        </Box> */}
         <form style={form}>
           <TextField
             variant="outlined"
@@ -106,6 +114,8 @@ export default function LoginForm() {
             error={passwordError}
             helperText={passwordError ? passwordErrorMessage : ""}
           />
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+
           <Button
             type="submit"
             fullWidth
@@ -116,7 +126,11 @@ export default function LoginForm() {
           >
             Sign In
           </Button>
-          <Typography component="h1" variant="caption">
+          <Typography
+            component="h1"
+            variant="caption"
+            style={{ marginLeft: 5 }}
+          >
             Dont have an account ?<Link href="/signup">sign up</Link>
           </Typography>
         </form>
